@@ -1,6 +1,6 @@
 OBJECTS = loader.o kmain.o
 ZIG = zig
-ZIGFLAGS = build-obj -target x86-native
+ZIGFLAGS = build-obj -target x86-freestanding # freestanding, NOT native! native generates std lib usages
 LDFLAGS = -T link.ld -melf_i386
 AS = nasm
 ASFLAGS = -f elf
@@ -15,7 +15,7 @@ os.iso: kernel.elf
 	genisoimage -R -b boot/grub/stage2_eltorito -no-emul-boot -boot-load-size 4 -A os -input-charset utf8 -quiet -boot-info-table -o os.iso iso
 
 run: os.iso
-	qemu-system-i386 -D ./qemu.log --drive media=cdrom,file=os.iso,readonly=on
+	qemu-system-i386 -d int,cpu_reset -D ./qemu.log -no-reboot --drive media=cdrom,file=os.iso,readonly=on
 
 %.o: %.zig
 	$(ZIG) $(ZIGFLAGS) $<
