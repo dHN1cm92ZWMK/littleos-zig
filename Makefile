@@ -1,6 +1,9 @@
 OBJECTS = loader.o kmain.o
 ZIG = zig
-ZIGFLAGS = build-obj -target x86-freestanding # freestanding, NOT native! native generates std lib usages
+# freestanding, NOT native! native generates std lib usages
+# CPU i386 to prevent generating SSE
+ZIGFLAGS = build-obj -mcpu=i386 -target x86-freestanding
+
 LDFLAGS = -T link.ld -melf_i386
 AS = nasm
 ASFLAGS = -f elf
